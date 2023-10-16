@@ -88,6 +88,25 @@ function init() {
     speeder.value = v;
     nmer.value = nm;
 
+    for (i = 0; i < n1; i++) {
+        xm[i] = [];
+        for (j = 0; j < n1; j++) xm[i][j]=hh*j;
+        ym[i] = [];
+        for (j = 0; j < n1; j++) ym[i][j]=hh*i;
+        vxm[i] = [];
+        for (j = 0; j < n1; j++) vxm[i][j]=0;
+        vym[i] = [];
+        for (j = 0; j < n1; j++) vym[i][j]=0;
+        xd[i] = [];
+        for (j = 0; j < n1; j++) xd[i][j]=Math.random()*10;
+        yd[i] = [];
+        for (j = 0; j < n1; j++) yd[i][j]=Math.random()*10;
+        vxd[i] = [];
+        for (j = 0; j < n1; j++) vxd[i][j]=Math.random()*150;
+        vyd[i] = [];
+        for (j = 0; j < n1; j++) vyd[i][j]=Math.random()*150;
+    }
+
     setskip();
 
     document.addEventListener("keydown", keyb)
@@ -114,104 +133,30 @@ function restart() {
 
 function drawplus() {
     t += dt;
-    Ex += v * dt;
-    if (Ex * 2 > width) {
-        stop();
-        return;
-    }
 
-    //Waves
-    var cnt = 0;
-    var r,
-        rr;
-    //        n0 = wavx.length - wavlen;        if (n0 < 0) n0 = 0;
-    for (i = wavx.length - 1; i > 0; i--) {
-        r = (t - wavt[i]) * c;
-        rr = (wavx[i] - Rx) * (wavx[i] - Rx) + (wavy[i] - Ry) * (wavy[i] - Ry);
-        if (r * r > rr) 
-            cnt += 1;
-        }
-    amp = cnt - wavcnt;
-    if (amp < 0) 
-        amp = 0;
-    wavcnt = cnt;
+    for(i=0;i<n1;i++)
+        for(j=0;j<n1;j++) {
+            vxd[i][j] -= kk*xd[i][j]*dt*(1+xd[i][j]*xd[i][j]);
+            vyd[i][j] -= kk*yd[i][j]*dt*(1+yd[i][j]*yd[i][j]);
+            xd[i][j] += vxd[i][j]*dt;
+            yd[i][j] += vyd[i][j]*dt;
+    }
 
     draw();
 
-    steps += 1;
-    if ((steps - 1) % skip) 
-        return;
-    wavt.push(t);
-    wavx.push(Ex);
-    wavy.push(Ey);
-    if (wavx.length > wavmaxlen) {
-        wavx.splice(0, wavx.length - wavlen);
-        wavy.splice(0, wavy.length - wavlen);
-        wavt.splice(0, wavt.length - wavlen);
-    }
 }
 
 function draw() {
 
     ctx.clearRect(0, 0, sWidth, sHeight); // clear canvas
 
-    //Emitter
-    ctx.fillStyle = emi_style;
-    ctx.beginPath();
-    ctx.arc(x0 + Ex * rescale, y0 + Ey * rescale, emi_rad, 0, Math.PI * 2, false);
-    ctx.fill();
-
-    //Waves
-    n0 = wavx.length - wavlen;
-    if (n0 < 0) 
-        n0 = 0;
-    ctx.lineWidth = 5;
-    for (var theta = 0; theta < ppi; theta += dtheta) {
-        var cosine = Math.cos(theta);
-        var ll = nm * gamma * (1 - beta * cosine);
-        var s = nm2color(ll);
-        var st = 'rgba(' + s[1] * 100 + '%,' + s[2] * 100 + '%,' + s[3] * 100 + '%,';
-        var opp = s[4];
-        var dopp,
-            r;
-        if (wavlen > 0) 
-            dopp = opp / wavlen;
-        else 
-            dopp = 1;
-        for (i = wavx.length - 1; i > n0; i--) {
-            r = (t - wavt[i]) * c;
-            ctx.strokeStyle = st + opp + ')';
+    for(i=0;i<n1;i++)
+        for(j=0;j<n1;j++) {
+            ctx.fillStyle = emi_style;
             ctx.beginPath();
-            ctx.arc(
-                x0 + wavx[i] * rescale,
-                y0 + wavy[i] * rescale,
-                r * rescale,
-                theta,
-                theta + dtheta,
-                false
-            );
-            ctx.stroke();
-            opp -= dopp;
-        }
+            ctx.arc(xm[i][j] + xd[i][j], ym[i][j] + yd[i][j], emi_rad, 0, Math.PI * 2, false);
+            ctx.fill();    
     }
-
-    //Reciever
-    var dr = 0;
-    if (amp > 0) {
-        dr = 3;
-        ctx.fillStyle = rec_style;
-    } else 
-        ctx.fillStyle = rec_style;
-    ctx.beginPath();
-    ctx.arc(
-        x0 + Rx * rescale,
-        y0 + Ry * rescale,
-        rec_rad + dr,
-        0,
-        Math.PI * 2,
-        false
-    );
-    ctx.fill();
 
 }
 
