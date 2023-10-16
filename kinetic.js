@@ -119,15 +119,8 @@ function init() {
 function restart() {
     stop();
 
-    Ex = -width / 2;
-    Ey = 0;
-    t = 0;
-    steps = 0;
-    wavt = [];
-    wavx = [];
-    wavy = [];
-    wavcnt = 0;
-
+    init();
+    
     draw();
 }
 
