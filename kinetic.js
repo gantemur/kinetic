@@ -102,9 +102,9 @@ function init() {
         yd[i] = [];
         for (j = 0; j < n1; j++) yd[i][j]=Math.random()*10;
         vxd[i] = [];
-        for (j = 0; j < n1; j++) vxd[i][j]=Math.random()*150;
+        for (j = 0; j < n1; j++) vxd[i][j]=Math.random()*vmax;
         vyd[i] = [];
-        for (j = 0; j < n1; j++) vyd[i][j]=Math.random()*150;
+        for (j = 0; j < n1; j++) vyd[i][j]=Math.random()*vmax;
     }
 
     setskip();
@@ -130,7 +130,9 @@ function drawplus() {
     for(i=0;i<n1;i++)
         for(j=0;j<n1;j++) {
             vxd[i][j] -= kk*xd[i][j]*dt*(1+xd[i][j]*xd[i][j]);
+            if (Math.abs(vxd[i][j]) > vmax) vxd[i][j] -= fric*vxd[i][j]
             vyd[i][j] -= kk*yd[i][j]*dt*(1+yd[i][j]*yd[i][j]);
+            if (Math.abs(vyd[i][j]) > vmax) vyd[i][j] -= fric*vyd[i][j]
             xd[i][j] += vxd[i][j]*dt;
             yd[i][j] += vyd[i][j]*dt;
     }

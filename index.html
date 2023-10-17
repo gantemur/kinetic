@@ -56,10 +56,6 @@
     var y0 = 150;
     var width = 2000;
     var h = 200;
-    var Ex = -width/2;
-    var Ey = 0 ;
-    var Rx = -width/4;
-    var Ry = h;
     var rescale = 1.7;
     var ring = 0;
     var begin = 1;
@@ -67,8 +63,6 @@
     var speed = 30;
     var t = 0;
     var dt = speed*0.001;
-    var dtheta = ppi/500;
-    var dthetad = dtheta+dtheta/10;
     var steps = 0;
     var skip = 20;
     var nm = 580;
@@ -76,6 +70,8 @@
     var n2 = n1*n1;
     var hh = 50;
     var kk = 10;
+    var vmax = 150;
+    var fric = 0.1;
     var xm = [];
     var ym = [];
     var vxm = [];
