@@ -3,20 +3,6 @@ function setskip() {
     wavlen = 15;
 }
 
-function speed_change() {
-    v = parseInt(speeder.value);
-    beta = v / c;
-    gamma = 1 / Math.sqrt(1 - beta * beta);
-    setskip();
-    draw();
-}
-
-function nm_change() {
-    nm = parseInt(nmer.value);
-    emi_style = nm2color(nm)[0];
-    draw();
-}
-
 function keyb(e) {
     if (e.keyCode == 32) 
         startstop();
@@ -24,7 +10,7 @@ function keyb(e) {
         restart();
     if (e.keyCode == 77) 
         mute();
-    }
+}
 
 function startstop() {
     //     	canvas.style.left = "10px";     	canvas.style.position = "absolute";
@@ -32,7 +18,8 @@ function startstop() {
         start();
     else 
         stop();
-    }
+}
+
 
 function start() {
     if (ring == 0) 
@@ -43,6 +30,105 @@ function start() {
 function stop() {
     ring = 0;
     window.clearInterval(timer);
+}
+
+function buttoncolors() {
+    if (wave) document.getElementById('WAVE').style.backgroundColor = "#0000FF";
+    else document.getElementById('WAVE').style.backgroundColor = "#000000";
+    if (wind) document.getElementById('WIND').style.backgroundColor = "#0000FF";
+    else document.getElementById('WIND').style.backgroundColor = "#000000";
+    if (energy==0) {
+        document.getElementById('TEMPN').style.backgroundColor = "#0000FF";
+        document.getElementById('TEMPH').style.backgroundColor = "#000000";
+        document.getElementById('TEMPL').style.backgroundColor = "#000000";
+    }
+    if (energy==1) {
+        document.getElementById('TEMPH').style.backgroundColor = "#0000FF";
+        document.getElementById('TEMPN').style.backgroundColor = "#000000";
+        document.getElementById('TEMPL').style.backgroundColor = "#000000";
+    }
+    if (energy==-1) {
+        document.getElementById('TEMPL').style.backgroundColor = "#0000FF";
+        document.getElementById('TEMPN').style.backgroundColor = "#000000";
+        document.getElementById('TEMPH').style.backgroundColor = "#000000";
+    }
+    if (expanse==0) {
+        document.getElementById('SCALEN').style.backgroundColor = "#0000FF";
+        document.getElementById('SCALEH').style.backgroundColor = "#000000";
+        document.getElementById('SCALEL').style.backgroundColor = "#000000";
+    }
+    if (expanse==1) {
+        document.getElementById('SCALEH').style.backgroundColor = "#0000FF";
+        document.getElementById('SCALEN').style.backgroundColor = "#000000";
+        document.getElementById('SCALEL').style.backgroundColor = "#000000";
+    }
+    if (expanse==-1) {
+        document.getElementById('SCALEL').style.backgroundColor = "#0000FF";
+        document.getElementById('SCALEN').style.backgroundColor = "#000000";
+        document.getElementById('SCALEH').style.backgroundColor = "#000000";
+    }
+}
+
+function tempn() {
+    energy = 0;
+    vmax = vmaxn;
+    buttoncolors();
+    restart();
+}
+
+function templ() {
+    energy = -1;
+    vmax = vmaxl;
+    buttoncolors();
+    restart();
+}
+
+function temph() {
+    energy = 1;
+    vmax = vmaxh;
+    buttoncolors();
+    restart();
+}
+
+function scalen() {
+    expanse = 0;
+    rescale = 1;
+    buttoncolors();
+    restart();
+}
+
+function scalel() {
+    expanse = -1;
+    rescale = 0.5;
+    buttoncolors();
+    restart();
+}
+
+function scaleh() {
+    expanse = 1;
+    rescale = 2;
+    buttoncolors();
+    restart();
+}
+
+function windn() {
+    wind = 1 - wind;
+    if (wind) {
+        wave = 0;
+        torus = 1;
+    }
+    buttoncolors();
+    restart();
+}
+
+function waven() {
+    wave = 1 - wave;
+    if (wave) {
+        wind = 0;
+        torus = 0;
+    }
+    buttoncolors();
+    restart();
 }
 
 function resize() {
@@ -56,7 +142,7 @@ function resize() {
     // sWidth = Math.min(sWidth, sHeight);        sHeight = sWidth;
     ctx.canvas.width = sWidth;
     ctx.canvas.height = sHeight;
-    rescale = sWidth / width;
+//    rescale = sWidth / width;
     x0 = sWidth / 2;
     y0 = sHeight / 2;
     document
@@ -73,6 +159,13 @@ function resize() {
         .getElementById('TEXT2')
         .style
         .width = '' + sWidth + 'px';
+    document
+        .getElementById('TEXT3')
+        .setAttribute("style", "width:" + sWidth + "px");
+    document
+        .getElementById('TEXT3')
+        .style
+        .width = '' + sWidth + 'px';
 
     if (ring == 0) 
         draw();
@@ -85,29 +178,28 @@ function resizedraw() {
 
 function init() {
     ring = 0;
-    speeder.value = v;
-    nmer.value = nm;
 
     for (i = 0; i < n1; i++) {
         xm[i] = [];
-        for (j = 0; j < n1; j++) xm[i][j]=hh*j;
+        for (j = 0; j < n2; j++) xm[i][j]=hh*j+hh2;
         ym[i] = [];
-        for (j = 0; j < n1; j++) ym[i][j]=hh*i;
+        for (j = 0; j < n2; j++) ym[i][j]=hh*i+hh2;
         vxm[i] = [];
-        for (j = 0; j < n1; j++) vxm[i][j]=0;
+        for (j = 0; j < n2; j++) vxm[i][j]=0;
         vym[i] = [];
-        for (j = 0; j < n1; j++) vym[i][j]=0;
+        for (j = 0; j < n2; j++) vym[i][j]=0;
         xd[i] = [];
-        for (j = 0; j < n1; j++) xd[i][j]=Math.random()*10;
+        for (j = 0; j < n2; j++) xd[i][j]=Math.random()*rmax;
         yd[i] = [];
-        for (j = 0; j < n1; j++) yd[i][j]=Math.random()*10;
+        for (j = 0; j < n2; j++) yd[i][j]=Math.random()*rmax;
         vxd[i] = [];
-        for (j = 0; j < n1; j++) vxd[i][j]=Math.random()*vmax;
+        for (j = 0; j < n2; j++) vxd[i][j]=Math.random()*vmax*vink;
         vyd[i] = [];
-        for (j = 0; j < n1; j++) vyd[i][j]=Math.random()*vmax;
+        for (j = 0; j < n2; j++) vyd[i][j]=Math.random()*vmax*vink;
     }
 
     setskip();
+    buttoncolors();
 
     document.addEventListener("keydown", keyb)
     window.addEventListener("orientationchange", resize, false);
@@ -126,9 +218,25 @@ function restart() {
 
 function drawplus() {
     t += dt;
-
+    var x1,x2,y1,y2,f;
     for(i=0;i<n1;i++)
-        for(j=0;j<n1;j++) {
+        for(j=0;j<n2;j++) {
+            if (wind) {
+                xm[i][j] += windx*dt;
+                ym[i][j] += windy*dt;
+            } else  if (wave) {
+                if (j==0) x1=-hh2+30*Math.sin(t*5); else x1=xm[i][j-1];
+                if (j==n2-1) x2=xbox+hh2; else x2=xm[i][j+1];
+//                if (i==0) if (j==0) x1=-hh2+30*Math.sin(t*8);
+                f =  x1+x2-2*xm[i][j];
+                vxm[i][j] += klong*f*dt;
+                xm[i][j] += vxm[i][j]*dt;
+                if (i==0) y1=-hh2; else y1=ym[i-1][j];
+                if (i==n1-1) y2=ybox+hh2; else y2=ym[i+1][j];
+                f = y1+y2-2*ym[i][j];
+                vym[i][j] += klong*f*dt;
+                ym[i][j] += (windy + vym[i][j])*dt;    
+            }
             vxd[i][j] -= kk*xd[i][j]*dt*(1+xd[i][j]*xd[i][j]);
             if (Math.abs(vxd[i][j]) > vmax) vxd[i][j] -= fric*vxd[i][j]
             vyd[i][j] -= kk*yd[i][j]*dt*(1+yd[i][j]*yd[i][j]);
@@ -143,16 +251,24 @@ function drawplus() {
 
 function draw() {
 
+    var x,y;
     ctx.clearRect(0, 0, sWidth, sHeight); // clear canvas
 
     for(i=0;i<n1;i++)
-        for(j=0;j<n1;j++) {
+        for(j=0;j<n2;j++) {
+            x = xm[i][j] + xd[i][j];
+            y = ym[i][j] + yd[i][j];
+            if (torus) {
+                x = x % xbox;
+                if (x < 0) x += xbox;
+                y = y % ybox;
+                if (y < 0) y += xbox;
+            }
             ctx.fillStyle = emi_style;
             ctx.beginPath();
-            ctx.arc(xm[i][j] + xd[i][j], ym[i][j] + yd[i][j], emi_rad, 0, Math.PI * 2, false);
+            ctx.arc(rescale*x, rescale*y, emi_rad, 0, Math.PI * 2, false);
             ctx.fill();    
     }
-
 }
 
 // takes wavelength in nm and returns an rgba value

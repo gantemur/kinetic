@@ -11,25 +11,32 @@
 
 <body>
 
-  <div id="TEXT1" class="textcontainer">
-    <div>
-      <label class="left">долгионы урт</label>
-      <input type="number" id="NM" name="NM" onchange="nm_change()" />
-      <label>нм</label>
-    </div>
-  </div>
-
   <div id="CCONT" width="300" height="300" class="canvascontainer">
     <canvas id="canvas" width="300" height="200" class="canvas" onclick="startstop()">
       Error: Browser does not support canvas element.
     </canvas>
   </div>
 
+  <div id="TEXT1" class="textcontainer">
+    <div>
+      <button id ="TEMPH" class="button" onclick="temph()">халуун</button>
+      <button id ="TEMPL" class="button" onclick="templ()">хүйтэн</button>
+      <button id ="TEMPN" class="button" onclick="tempn()">жирийн</button>
+    </div>
+  </div>
+
   <div id="TEXT2" class="textcontainer">
     <div>
-      <label class="left">хурд</label>
-      <input type="number" id="SPEED" name="SPEED" onchange="speed_change()" />
-      <label>Мм/с</label>
+      <button id ="SCALEL" class="button" onclick="scalel()">агшсан</button>
+      <button id ="SCALEH" class="button" onclick="scaleh()">тэлсэн</button>
+      <button id ="SCALEN" class="button" onclick="scalen()">жирийн</button>
+    </div>
+  </div> 
+
+  <div id="TEXT3" class="textcontainer">
+    <div>
+      <button id ="WIND" class="button" onclick="windn()">салхи</button>
+      <button id ="WAVE" class="button" onclick="waven()">долгион</button>
     </div>
     <button id ="STOP" class="button" onclick="restart()">&#8634;</button>
   </div> 
@@ -38,9 +45,7 @@
     const ppi = Math.PI * 2;
     var canvas = document.getElementById('canvas');
     var ctx = canvas.getContext('2d');
-    var speeder = document.getElementById("SPEED");
-    var nmer = document.getElementById("NM");
-    var vpadding = 80;
+    var vpadding = 100;
     var wav_style = 'rgba(200, 200, 0,'; //Waves
     var emi_style = 'rgba(240, 240, 0, .7)'; //Emitter
     var emi_rad = 3;
@@ -56,7 +61,7 @@
     var y0 = 150;
     var width = 2000;
     var h = 200;
-    var rescale = 1.7;
+    var rescale = 1;
     var ring = 0;
     var begin = 1;
     var timer;
@@ -66,12 +71,28 @@
     var steps = 0;
     var skip = 20;
     var nm = 580;
+    var torus = 0;
+    var wind = 0;
+    var wave = 0;
+    var energy = 0;
+    var expanse = 0;
     var n1 = 10;
-    var n2 = n1*n1;
+    var n2 = 15;
     var hh = 50;
+    var hh2 = .5*hh;
+    var xbox = n2*hh;
+    var ybox = n1*hh;
     var kk = 10;
-    var vmax = 150;
+    var rmax = 10;
+    var vmaxn = 40;
+    var vmaxl = 20;
+    var vmaxh = 60;
+    var vmax = vmaxn;
+    var vink = 0.1;
     var fric = 0.1;
+    var windx = 110;
+    var windy = 0;
+    var klong = 10;
     var xm = [];
     var ym = [];
     var vxm = [];
