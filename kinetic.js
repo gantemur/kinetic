@@ -99,14 +99,14 @@ function scalen() {
 
 function scalel() {
     expanse = -1;
-    rescale = 0.5;
+    rescale = 0.7;
     buttoncolors();
     restart();
 }
 
 function scaleh() {
     expanse = 1;
-    rescale = 2;
+    rescale = 1.5;
     buttoncolors();
     restart();
 }
