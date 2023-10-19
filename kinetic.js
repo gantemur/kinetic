@@ -69,66 +69,76 @@ function buttoncolors() {
     }
 }
 
-function tempn() {
-    energy = 0;
-    vmax = vmaxn;
-    buttoncolors();
-    restart();
-}
-
 function templ() {
     energy = -1;
     vmax = vmaxl;
     buttoncolors();
-    restart();
+}
+
+function tempn() {
+    vmax = vmaxn;
+    if (energy<0) heating();
+    energy = 0;
+    buttoncolors();
 }
 
 function temph() {
-    energy = 1;
     vmax = vmaxh;
+    if (energy<1) heating();
+    energy = 1;
     buttoncolors();
-    restart();
 }
 
 function scalen() {
     expanse = 0;
     rescale = 1;
     buttoncolors();
-    restart();
 }
 
 function scalel() {
     expanse = -1;
-    rescale = 0.7;
+    rescale = 0.6;
     buttoncolors();
-    restart();
 }
 
 function scaleh() {
     expanse = 1;
-    rescale = 1.5;
+    rescale = 1.6;
     buttoncolors();
-    restart();
 }
 
 function windn() {
+    windd = 1;
     wind = 1 - wind;
-    if (wind) {
-        wave = 0;
+    oring = ring;
+    beginning = 0;
+    if (wind) {    
         torus = 1;
+        if (wave) beginning=1;
+        wave = 0;
     }
     buttoncolors();
-    restart();
+    if (beginning) {
+        restart();
+        if (oring) start();
+    }
 }
 
 function waven() {
     wave = 1 - wave;
+    oring = ring;
+    beginning = 0;
     if (wave) {
-        wind = 0;
         torus = 0;
-    }
+        if (windd) beginning=1;
+        wind = 0;
+    } else beginning=1;
     buttoncolors();
-    restart();
+    if (beginning) {
+        windd = 0;
+        restart();
+        if (oring) start();
+    }
 }
 
 function resize() {
@@ -174,6 +184,13 @@ function resize() {
 function resizedraw() {
     resize();
     draw();
+}
+
+function heating() {
+    for (i = 0; i < n1; i++) {
+        for (j = 0; j < n2; j++) vxd[i][j]=Math.random()*vmax;
+        for (j = 0; j < n2; j++) vyd[i][j]=Math.random()*vmax;
+    }
 }
 
 function init() {
