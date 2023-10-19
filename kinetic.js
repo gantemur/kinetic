@@ -93,18 +93,21 @@ function scalen() {
     expanse = 0;
     rescale = 1;
     buttoncolors();
+    if (ring==0) draw();
 }
 
 function scalel() {
     expanse = -1;
     rescale = 0.6;
     buttoncolors();
+    if (ring==0) draw();
 }
 
 function scaleh() {
     expanse = 1;
     rescale = 1.6;
     buttoncolors();
+    if (ring==0) draw();
 }
 
 function windn() {
