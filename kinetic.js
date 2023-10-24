@@ -132,6 +132,7 @@ function waven() {
     oring = ring;
     beginning = 0;
     if (wave) {
+        t = 0;
         torus = 0;
         if (windd) beginning=1;
         wind = 0;
@@ -236,25 +237,38 @@ function restart() {
     draw();
 }
 
+function pulse(t) {
+    if (t<3*dt) return 50;
+    else return 0;
+}
+
+function sinusoid(t) {
+    return 20*Math.sin(t*5);
+}
+
 function drawplus() {
     t += dt;
-    var x1,x2,y1,y2,f;
+    var x1,x2,y1,y2,dmean,dx,dy;
     for(i=0;i<n1;i++)
         for(j=0;j<n2;j++) {
             if (wind) {
                 xm[i][j] += windx*dt;
                 ym[i][j] += windy*dt;
             } else  if (wave) {
-                if (j==0) x1=-hh2+20*Math.sin(t*5); else x1=xm[i][j-1];
+                if (j==0) x1=-hh2+sinusoid(t); else x1=xm[i][j-1];
                 if (j==n2-1) x2=xbox+hh2; else x2=xm[i][j+1];
 //                if (i==0) if (j==0) x1=-hh2+30*Math.sin(t*8);
-                f =  x1+x2-2*xm[i][j];
-                vxm[i][j] += klong*f*dt;
+                dmean =  x1+x2-2*xm[i][j];
+                dx = xm[i][j] - (hh*j+hh2);
+                if (dx>rrmax) vxm[i][j] -= vxm[i][j]*fric;
+                if (j>pml) vxm[i][j] -= vxm[i][j]*(j-pml)*pmlf*dt;
+                vxm[i][j] += klong*dmean*dt;
                 xm[i][j] += vxm[i][j]*dt;
                 if (i==0) y1=-hh2; else y1=ym[i-1][j];
                 if (i==n1-1) y2=ybox+hh2; else y2=ym[i+1][j];
-                f = y1+y2-2*ym[i][j];
-                vym[i][j] += klong*f*dt;
+                dmean = y1+y2-2*ym[i][j];
+                dy = ym[i][j] - (hh*i+hh2);
+                vym[i][j] += klong*dmean*dt;
                 ym[i][j] += (windy + vym[i][j])*dt;    
             }
             vxd[i][j] -= kk*xd[i][j]*dt*(1+xd[i][j]*xd[i][j]);
