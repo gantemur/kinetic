@@ -243,7 +243,7 @@ function pulse(t) {
 }
 
 function sinusoid(t) {
-    return 20*Math.sin(t*5);
+    return 20*Math.sin(t*3);
 }
 
 function drawplus() {
